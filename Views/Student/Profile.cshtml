@@ -1,0 +1,116 @@
+@model User
+@{
+    ViewData["Title"] = "Profile";
+    var verificationRequest = ViewBag.VerificationRequest as VerificationRequest;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>My Profile</h2>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Name:</strong></div>
+                        <div class="col-md-8">@Model.Name</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Student Number:</strong></div>
+                        <div class="col-md-8">@Model.StudentNumber</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Email:</strong></div>
+                        <div class="col-md-8">@Model.Email</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Year/Section:</strong></div>
+                        <div class="col-md-8">@Model.YearSection</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Birthday:</strong></div>
+                        <div class="col-md-8">@Model.Birthday.ToString("MMM dd, yyyy")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Sex:</strong></div>
+                        <div class="col-md-8">@Model.Sex</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>Verification Status:</strong></div>
+                        <div class="col-md-8">
+                            @if (Model.IsVerified)
+                            {
+                                <span class="verified-badge">✓ Verified</span>
+                            }
+                            else
+                            {
+                                <span class="not-verified-badge">Not Verified</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.IsVerified)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Account Verification</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (verificationRequest == null)
+                        {
+                            <p class="text-muted">You need to verify your account to participate in elections and apply as a candidate.</p>
+                            <form asp-action="RequestVerification" method="post">
+                                @Html.AntiForgeryToken()
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Verification Document (Optional for demo)</label>
+                                    <input type="text" name="documentUrl" class="form-control" placeholder="Document URL or leave blank" />
+                                    <small class="text-muted">In a real application, you would upload an ID or student card.</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Request Verification</button>
+                            </form>
+                        }
+                        else if (verificationRequest.Status == "Pending")
+                        {
+                            <div class="alert alert-info">
+                                <strong>Verification Requested:</strong> Your verification request is pending admin approval.
+                                <p class="mb-0 mt-2"><small>Requested on: @verificationRequest.RequestedAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small></p>
+                            </div>
+                        }
+                        else if (verificationRequest.Status == "Rejected")
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Verification Rejected:</strong> @verificationRequest.RejectionReason
+                            </div>
+                            <form asp-action="RequestVerification" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-primary">Request Verification Again</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <a asp-action="Dashboard" class="btn btn-outline-primary w-100 mb-2">Dashboard</a>
+                    @if (Model.IsVerified)
+                    {
+                        <div class="alert alert-success mt-3 mb-0">
+                            <small>✓ You can now vote and apply as a candidate!</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

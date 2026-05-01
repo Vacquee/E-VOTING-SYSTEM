@@ -1,0 +1,55 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Login</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="StudentNumber" class="form-label">Student Number</label>
+                            <input asp-for="StudentNumber" class="form-control" placeholder="YY-#####" />
+                            <span asp-validation-for="StudentNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+
+                        <div class="mt-3 text-center">
+                            <a asp-action="ForgotPassword">Forgot Password?</a>
+                        </div>
+
+                        <div class="mt-2 text-center">
+                            <p>Don't have an account? <a asp-action="Register">Sign Up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

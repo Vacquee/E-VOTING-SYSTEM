@@ -1,0 +1,73 @@
+@model List<User>
+@{
+    ViewData["Title"] = "Manage Students";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Manage Students</h2>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Student Number</th>
+                        <th>Email</th>
+                        <th>Year/Section</th>
+                        <th>Verified</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model)
+                    {
+                        <tr>
+                            <td>@student.Name</td>
+                            <td>@student.StudentNumber</td>
+                            <td>@student.Email</td>
+                            <td>@student.YearSection</td>
+                            <td>
+                                @if (student.IsVerified)
+                                {
+                                    <span class="verified-badge">✓ Verified</span>
+                                }
+                                else
+                                {
+                                    <span class="not-verified-badge">Not Verified</span>
+                                }
+                            </td>
+                            <td>
+                                @if (student.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="ToggleStudentStatus" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@student.Id" />
+                                    <button type="submit" class="btn btn-sm btn-warning">
+                                        @(student.IsActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <p class="text-muted">No students registered yet.</p>
+        </div>
+    }
+</div>

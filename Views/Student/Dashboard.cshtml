@@ -1,0 +1,104 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Welcome, @Model.User.Name!</h2>
+            <div class="mt-2">
+                @if (Model.User.IsVerified)
+                {
+                    <span class="verified-badge">✓ Verified Account</span>
+                }
+                else
+                {
+                    <span class="not-verified-badge">⚠ Not Verified</span>
+                    <p class="text-muted mt-2">
+                        <a asp-action="Profile" class="text-decoration-none">Verify your account</a> to participate in elections and apply as a candidate.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model.OngoingElections.Any())
+    {
+        <div class="mb-5">
+            <h4 class="mb-3">Ongoing Elections</h4>
+            <div class="row">
+                @foreach (var election in Model.OngoingElections)
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card election-card h-100" onclick="window.location='@Url.Action("Election", "Student", new { id = election.Id })'">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title">@election.Title</h5>
+                                    <span class="badge badge-ongoing">Ongoing</span>
+                                </div>
+                                <p class="card-text text-muted">@election.Description</p>
+                                <p class="mb-1"><small><strong>Ends:</strong> @election.EndAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.UpcomingElections.Any())
+    {
+        <div class="mb-5">
+            <h4 class="mb-3">Upcoming Elections</h4>
+            <div class="row">
+                @foreach (var election in Model.UpcomingElections)
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card election-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title">@election.Title</h5>
+                                    <span class="badge badge-upcoming">Upcoming</span>
+                                </div>
+                                <p class="card-text text-muted">@election.Description</p>
+                                <p class="mb-1"><small><strong>Starts:</strong> @election.StartAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.PastElections.Any())
+    {
+        <div class="mb-5">
+            <h4 class="mb-3">Past Elections</h4>
+            <div class="row">
+                @foreach (var election in Model.PastElections)
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card election-card h-100" onclick="window.location='@Url.Action("Election", "Student", new { id = election.Id })'">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title">@election.Title</h5>
+                                    <span class="badge badge-past">Past</span>
+                                </div>
+                                <p class="card-text text-muted">@election.Description</p>
+                                <p class="mb-1"><small><strong>Ended:</strong> @election.EndAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (!Model.OngoingElections.Any() && !Model.UpcomingElections.Any() && !Model.PastElections.Any())
+    {
+        <div class="text-center mt-5">
+            <p class="text-muted">No elections available at the moment.</p>
+        </div>
+    }
+</div>

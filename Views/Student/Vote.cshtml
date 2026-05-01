@@ -1,0 +1,91 @@
+@model List<PositionWithCandidates>
+@{
+    ViewData["Title"] = "Cast Your Vote";
+    var election = ViewBag.Election as Election;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="mb-4">Cast Your Vote - @election?.Title</h2>
+
+            <div class="alert alert-info">
+                <h5>Terms and Conditions</h5>
+                <ul>
+                    <li>Your vote is private and anonymous.</li>
+                    <li>You can vote only once per position.</li>
+                    <li>Once submitted, your vote cannot be changed.</li>
+                    <li>Make sure to review your selections before submitting.</li>
+                </ul>
+            </div>
+
+            <form asp-action="SubmitVote" method="post" id="voteForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ElectionId" value="@election?.Id" />
+
+                @foreach (var positionWithCandidates in Model)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>@positionWithCandidates.Position.Title</h5>
+                            @if (!string.IsNullOrEmpty(positionWithCandidates.Position.Description))
+                            {
+                                <p class="mb-0 text-muted">@positionWithCandidates.Position.Description</p>
+                            }
+                        </div>
+                        <div class="card-body">
+                            @if (positionWithCandidates.Candidates.Any())
+                            {
+                                @foreach (var candidate in positionWithCandidates.Candidates)
+                                {
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio"
+                                               name="PositionVotes[@positionWithCandidates.Position.Id]"
+                                               value="@candidate.Id"
+                                               id="candidate_@candidate.Id"
+                                               required>
+                                        <label class="form-check-label" for="candidate_@candidate.Id">
+                                            <strong>@candidate.Name</strong> (@candidate.StudentNumber)
+                                            <br />
+                                            <small class="text-muted">@candidate.Bio</small>
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No candidates for this position.</p>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="AcceptTerms" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                <strong>I accept the terms and conditions and confirm that I want to submit my vote.</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">Submit Vote</button>
+                    <a asp-action="Election" asp-route-id="@election?.Id" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('voteForm').addEventListener('submit', function(e) {
+            if (!confirm('Are you sure you want to submit your vote? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

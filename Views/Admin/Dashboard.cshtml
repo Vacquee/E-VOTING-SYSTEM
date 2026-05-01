@@ -1,0 +1,115 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Total Students</h6>
+                    <h2 class="mb-0">@Model.TotalStudents</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Verified Students</h6>
+                    <h2 class="mb-0">@Model.VerifiedStudents</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Pending Verifications</h6>
+                    <h2 class="mb-0">@Model.PendingVerifications</h2>
+                    <a asp-action="VerificationRequests" class="btn btn-sm btn-primary mt-2">Review</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Pending Candidates</h6>
+                    <h2 class="mb-0">@Model.PendingCandidates</h2>
+                    <a asp-action="CandidateApprovals" class="btn btn-sm btn-primary mt-2">Review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Active Elections</h6>
+                    <h2 class="mb-0">@Model.ActiveElections</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Total Elections</h6>
+                    <h2 class="mb-0">@Model.TotalElections</h2>
+                    <a asp-action="Elections" class="btn btn-sm btn-primary mt-2">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Elections</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentElections.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var election in Model.RecentElections)
+                                    {
+                                        <tr>
+                                            <td>@election.Title</td>
+                                            <td><span class="badge badge-@election.ComputedStatus.ToLower()">@election.ComputedStatus</span></td>
+                                            <td>@election.StartAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                                            <td>@election.EndAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <a asp-action="ElectionDetails" asp-route-id="@election.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                                @if (election.IsPast)
+                                                {
+                                                    <a asp-action="ElectionResults" asp-route-id="@election.Id" class="btn btn-sm btn-success">Results</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No elections yet.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

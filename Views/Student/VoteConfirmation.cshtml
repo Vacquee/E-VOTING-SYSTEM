@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Vote Confirmed";
+    var election = ViewBag.Election as Election;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h1 class="text-success mb-4">✓ Vote Submitted Successfully!</h1>
+                    <p class="lead">Your vote for <strong>@election?.Title</strong> has been recorded.</p>
+                    <p class="text-muted">Thank you for participating in the election. Your vote is private and anonymous.</p>
+
+                    <hr class="my-4" />
+
+                    <div class="d-grid gap-2 col-md-6 mx-auto">
+                        <a asp-action="Dashboard" class="btn btn-primary">Return to Dashboard</a>
+                        <a asp-action="Election" asp-route-id="@election?.Id" class="btn btn-outline-secondary">View Election Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

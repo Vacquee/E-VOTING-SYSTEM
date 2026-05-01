@@ -1,0 +1,56 @@
+@model List<Election>
+@{
+    ViewData["Title"] = "Manage Elections";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Elections</h2>
+        <a asp-action="CreateElection" class="btn btn-primary">Create New Election</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Computed Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var election in Model)
+                    {
+                        <tr>
+                            <td>@election.Title</td>
+                            <td>@election.Status</td>
+                            <td><span class="badge badge-@election.ComputedStatus.ToLower()">@election.ComputedStatus</span></td>
+                            <td>@election.StartAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</td>
+                            <td>@election.EndAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</td>
+                            <td>
+                                <a asp-action="ElectionDetails" asp-route-id="@election.Id" class="btn btn-sm btn-info">Details</a>
+                                <a asp-action="EditElection" asp-route-id="@election.Id" class="btn btn-sm btn-warning">Edit</a>
+                                @if (election.IsPast || election.Status == "closed")
+                                {
+                                    <a asp-action="ElectionResults" asp-route-id="@election.Id" class="btn btn-sm btn-success">Results</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <p class="text-muted">No elections created yet.</p>
+            <a asp-action="CreateElection" class="btn btn-primary">Create Your First Election</a>
+        </div>
+    }
+</div>

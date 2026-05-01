@@ -1,0 +1,100 @@
+@model ElectionDetailsViewModel
+@{
+    ViewData["Title"] = Model.Election.Title;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h2>@Model.Election.Title</h2>
+                    <span class="badge badge-@(Model.Election.ComputedStatus.ToLower())">@Model.Election.ComputedStatus</span>
+                </div>
+                <a asp-action="Dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Description</h5>
+                    <p>@Model.Election.Description</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Start:</strong> @Model.Election.StartAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>End:</strong> @Model.Election.EndAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.CanVote && !Model.VotingStatus.Any())
+            {
+                <div class="alert alert-success">
+                    <strong>You can vote now!</strong>
+                    <a asp-action="Vote" asp-route-id="@Model.Election.Id" class="btn btn-success btn-sm ms-2">Cast Your Vote</a>
+                </div>
+            }
+            else if (!Model.IsVerified && Model.Election.IsOngoing)
+            {
+                <div class="alert alert-warning">
+                    <strong>Verification Required:</strong> You must verify your account before voting.
+                    <a asp-action="Profile" class="btn btn-warning btn-sm ms-2">Verify Account</a>
+                </div>
+            }
+            else if (Model.VotingStatus.Any())
+            {
+                <div class="alert alert-info">
+                    <strong>You have already voted in this election.</strong>
+                </div>
+            }
+
+            <h4 class="mt-4 mb-3">Positions and Candidates</h4>
+
+            @foreach (var positionWithCandidates in Model.Positions)
+            {
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@positionWithCandidates.Position.Title</h5>
+                        @if (!string.IsNullOrEmpty(positionWithCandidates.Position.Description))
+                        {
+                            <p class="mb-0 text-muted">@positionWithCandidates.Position.Description</p>
+                        }
+                        @if (Model.VotingStatus.ContainsKey(positionWithCandidates.Position.Id!))
+                        {
+                            <span class="badge bg-success mt-2">✓ Voted</span>
+                        }
+                        else if (Model.IsVerified && Model.Election.IsOngoing)
+                        {
+                            <a asp-action="ApplyCandidate" asp-route-electionId="@Model.Election.Id" asp-route-positionId="@positionWithCandidates.Position.Id" class="btn btn-sm btn-outline-primary mt-2">Apply as Candidate</a>
+                        }
+                    </div>
+                    <div class="card-body">
+                        @if (positionWithCandidates.Candidates.Any())
+                        {
+                            <div class="row">
+                                @foreach (var candidate in positionWithCandidates.Candidates)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="card-title">@candidate.Name</h6>
+                                                <p class="text-muted mb-2"><small>@candidate.StudentNumber</small></p>
+                                                <p class="card-text">@candidate.Bio</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No candidates yet.</p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

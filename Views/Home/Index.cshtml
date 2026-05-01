@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Student Organizations Election and Voting Management System</h1>
+        <p class="lead mt-3">Secure, transparent, and efficient digital voting for student organizations</p>
+        <div class="mt-4">
+            <a class="btn btn-light btn-lg me-2" asp-controller="Account" asp-action="Login">Login</a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Register">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-success">Secure Voting</h3>
+                    <p class="card-text">Private and anonymous digital voting ensures your vote remains confidential.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-success">One Vote, One Voice</h3>
+                    <p class="card-text">Each verified student can vote once per position, ensuring fair elections.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-success">Real-time Results</h3>
+                    <p class="card-text">View election results immediately after voting closes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

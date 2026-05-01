@@ -1,0 +1,151 @@
+/* Green and White Theme */
+:root {
+    --primary-green: #2d5016;
+    --light-green: #4a7c2c;
+    --lighter-green: #6ba047;
+    --pale-green: #e8f5e9;
+    --white: #ffffff;
+    --text-dark: #212529;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--white);
+    color: var(--text-dark);
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--primary-green);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--light-green);
+    border-color: var(--light-green);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-success {
+    background-color: var(--lighter-green);
+    border-color: var(--lighter-green);
+}
+
+.btn-success:hover {
+    background-color: var(--light-green);
+    border-color: var(--light-green);
+}
+
+/* Cards */
+.card {
+    border: 1px solid var(--light-green);
+    box-shadow: 0 2px 4px rgba(45, 80, 22, 0.1);
+}
+
+.card-header {
+    background-color: var(--pale-green);
+    border-bottom: 2px solid var(--light-green);
+    font-weight: 600;
+    color: var(--primary-green);
+}
+
+/* Election Cards */
+.election-card {
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.election-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(45, 80, 22, 0.2);
+}
+
+.badge-ongoing {
+    background-color: var(--light-green);
+}
+
+.badge-upcoming {
+    background-color: #ffc107;
+}
+
+.badge-past {
+    background-color: #6c757d;
+}
+
+/* Forms */
+.form-label {
+    font-weight: 500;
+    color: var(--primary-green);
+}
+
+.form-control:focus {
+    border-color: var(--light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 44, 0.25);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+    color: var(--white);
+    padding: 80px 0;
+    text-align: center;
+}
+
+/* Dashboard Stats */
+.stat-card {
+    background: var(--pale-green);
+    border-left: 4px solid var(--light-green);
+}
+
+/* Verified Badge */
+.verified-badge {
+    background-color: var(--light-green);
+    color: var(--white);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.not-verified-badge {
+    background-color: #dc3545;
+    color: var(--white);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Tables */
+.table {
+    border: 1px solid var(--pale-green);
+}
+
+.table thead {
+    background-color: var(--pale-green);
+    color: var(--primary-green);
+}
+
+/* Links */
+a {
+    color: var(--light-green);
+}
+
+a:hover {
+    color: var(--primary-green);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--pale-green);
+    margin-top: 3rem;
+}
+
+/* Alert customization */
+.alert-success {
+    background-color: var(--pale-green);
+    border-color: var(--light-green);
+    color: var(--primary-green);
+}

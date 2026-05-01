@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Election Details";
+    var election = ViewBag.Election as Election;
+    var positions = ViewBag.Positions as List<PositionWithCandidates>;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>@election?.Title</h2>
+            <span class="badge badge-@election?.ComputedStatus.ToLower()">@election?.ComputedStatus</span>
+        </div>
+        <div>
+            <a asp-action="EditElection" asp-route-id="@election?.Id" class="btn btn-warning">Edit Election</a>
+            <a asp-action="CreatePosition" asp-route-electionId="@election?.Id" class="btn btn-primary">Add Position</a>
+            <a asp-action="Elections" class="btn btn-outline-secondary">Back</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Election Information</h5>
+            <p>@election?.Description</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Status:</strong> @election?.Status</p>
+                    <p><strong>Start:</strong> @election?.StartAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Computed Status:</strong> @election?.ComputedStatus</p>
+                    <p><strong>End:</strong> @election?.EndAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Positions and Candidates</h4>
+
+    @if (positions != null && positions.Any())
+    {
+        @foreach (var positionWithCandidates in positions)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>@positionWithCandidates.Position.Title</h5>
+                    @if (!string.IsNullOrEmpty(positionWithCandidates.Position.Description))
+                    {
+                        <p class="mb-0 text-muted">@positionWithCandidates.Position.Description</p>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (positionWithCandidates.Candidates.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Student Number</th>
+                                        <th>Status</th>
+                                        <th>Bio</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var candidate in positionWithCandidates.Candidates)
+                                    {
+                                        <tr>
+                                            <td>@candidate.Name</td>
+                                            <td>@candidate.StudentNumber</td>
+                                            <td>
+                                                @if (candidate.Status == "Approved")
+                                                {
+                                                    <span class="badge bg-success">@candidate.Status</span>
+                                                }
+                                                else if (candidate.Status == "Pending")
+                                                {
+                                                    <span class="badge bg-warning">@candidate.Status</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">@candidate.Status</span>
+                                                }
+                                            </td>
+                                            <td>@(candidate.Bio.Length > 50 ? candidate.Bio.Substring(0, 50) + "..." : candidate.Bio)</td>
+                                            <td>
+                                                @if (candidate.Status == "Pending")
+                                                {
+                                                    <form asp-action="ApproveCandidate" asp-controller="Admin" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@candidate.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No candidates for this position yet.</p>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No positions created yet. <a asp-action="CreatePosition" asp-route-electionId="@election?.Id">Create a position</a>
+        </div>
+    }
+</div>
